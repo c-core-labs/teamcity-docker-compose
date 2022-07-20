@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # Setup docker repository
 sudo apt-get update
 sudo apt-get install -y \
@@ -39,7 +40,6 @@ chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
 git clone https://github.com/c-core-labs/teamcity-docker-compose.git
 cd teamcity-docker-compose
 
-sed -i 's/docker-compose/docker compose/g' Makefile
 
 # Create .env secret file
 cat <<EOF > .env
@@ -55,9 +55,13 @@ LETSENCRYPT_HOST=teamcity.c-core.app
 LETSENCRYPT_EMAIL=birva.patel@c-core.ca
 EOF
 
+
+# Build docker images
 docker compose -f docker-compose.yml build
 
+# Create docker network
 docker network create "web"
+
 
 # Teamcity directories for volume mounts
 mkdir $HOME/data
@@ -65,22 +69,10 @@ mkdir $HOME/logs
 sudo chown -R 1000:1000 $HOME/data
 sudo chown -R 1000:1000 $HOME/logs
 
+
 # Traefik directories for volume mounts
 sudo mkdir -p /opt/traefik && sudo touch /opt/traefik/acme.json && sudo chmod 600 /opt/traefik/acme.json
-docker-compose -f docker-compose.yml up -d && docker-compose -f docker-compose.yml logs -f -t --tail=10
 
-docker run --rm -it \
-       --volume "/opt/teamcity/data:/data/teamcity_server/datadir" \
-       --volume "/opt/teamcity/logs:/opt/teamcity/logs" \
-       jetbrains/teamcity-server:latest /bin/bash
 
-docker run --rm -it jetbrains/teamcity-server:latest
-
-mkdir $HOME/data
-mkdir $HOME/logs
-sudo chown -R 1000:1000 $HOME/data
-sudo chown -R 1000:1000 $HOME/logs
-docker run --rm -it \
-       --volume "$HOME/data:/data/teamcity_server/datadir" \
-       --volume "$HOME/logs:/opt/teamcity/logs" \
-       jetbrains/teamcity-server:latest
+# Run TeamCity with Let's Encrypt TLS terminated by Traefik
+docker compose up

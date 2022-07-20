@@ -1,7 +1,7 @@
-# https://github.com/egregors/teamcity-docker-compose
+# https://github.com/egregors/teamcity-docker compose
 # Team City
 
-COMPOSE_FILE=docker-compose.yml
+COMPOSE_FILE=docker compose.yml
 all: help  # Show this message
 
 # update & upgrade TC
@@ -10,16 +10,16 @@ up: acme uplog  ## Up services
 
 # up and show logs
 uplog:  # Up services and show logs
-	docker-compose -f $(COMPOSE_FILE) up -d && docker-compose -f $(COMPOSE_FILE) logs -f -t --tail=10
+	docker compose -f $(COMPOSE_FILE) up -d && docker compose -f $(COMPOSE_FILE) logs -f -t --tail=10
 
 stop:  ## Stop services
-	docker-compose -f $(COMPOSE_FILE) stop
+	docker compose -f $(COMPOSE_FILE) stop
 
 build:  ## Build all images
-	docker-compose -f $(COMPOSE_FILE) build --pull --no-cache
+	docker compose -f $(COMPOSE_FILE) build --pull --no-cache
 
 down:  ## Stop services and cleanup
-	docker-compose -f $(COMPOSE_FILE) down --rmi all
+	docker compose -f $(COMPOSE_FILE) down --rmi all
 
 acme:  ## Create folder and file for acme credentials
 	mkdir -p /opt/traefik && touch /opt/traefik/acme.json && chmod 600 /opt/traefik/acme.json
