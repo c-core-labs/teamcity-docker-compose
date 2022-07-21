@@ -26,6 +26,7 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plu
 # Post install docker permissions to permit non-root usage
 sudo groupadd docker
 sudo usermod -aG docker $USER
+sudo -s -u ${USER}
 
 
 # Setup docker-compose
