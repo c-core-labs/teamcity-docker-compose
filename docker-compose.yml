@@ -27,47 +27,6 @@ services:
         max-size: "10m"
         max-file: "5"
 
-  agent:
-    build: ./agents/python-node-yarn
-    env_file: .env
-    depends_on:
-      - redis
-    #     if you need docker inside the agent
-    #     (http://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    labels:
-      - "traefik.enable=false"
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "5"
-
-  postgres:
-    build: ./postgres
-    volumes:
-      - "/opt/teamcity/pg_data:/var/lib/postgresql/data"
-      - "/opt/teamcity/pg_backup:/backups"
-    env_file: .env
-    labels:
-      - "traefik.enable=false"
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "5"
-
-  redis:
-    image: redis:3.2
-    labels:
-      - "traefik.enable=false"
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "5"
-
   traefik:
     image: traefik:1.7-alpine
     restart: on-failure
