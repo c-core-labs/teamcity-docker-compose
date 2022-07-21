@@ -12,8 +12,6 @@ services:
     hostname: ${VIRTUAL_HOST}
     ports:
       - "8111"
-    depends_on:
-      - postgres
     env_file: .env
     labels:
       - "traefik.enable=true"
